@@ -1,8 +1,14 @@
 package com.example.fours.auth;
 
-import com.example.fours.security.JwtUtil;
+import com.example.fours.payload.AuthResponse;
+import com.example.fours.payload.LoginRequest;
+import com.example.fours.security.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -10,23 +16,20 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-    @Value("${admin.username}")
-    private String adminUsername;
-
-    @Value("${admin.password}")
-    private String adminPassword;
-
-    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
+    private final JwtService jwtService;
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
 
-        if (request.getUsername().equals(adminUsername)
-                && request.getPassword().equals(adminPassword)) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
 
-            return jwtUtil.generateToken(request.getUsername());
-        }
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+        String jwtToken = jwtService.generateToken(userDetails);
 
-        throw new RuntimeException("Invalid credentials");
+        return ResponseEntity.ok(new AuthResponse(jwtToken));
     }
 }

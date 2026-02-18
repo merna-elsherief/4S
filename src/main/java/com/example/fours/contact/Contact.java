@@ -1,4 +1,4 @@
-package com.example.fours.blog;
+package com.example.fours.contact;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -16,24 +14,22 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "blogs")
-public class Blog {
+@Document(collection = "contacts")
+public class Contact {
 
     @Id
     private String id;
 
-    private String title;
+    private String name;
 
-    @Indexed(unique = true)
-    private String slug;
+    private String email;
 
-    private String content;
+    private String phone;
 
-    private String imageUrl;
+    private String subject;
+
+    private String message;
 
     @CreatedDate
     private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 }
