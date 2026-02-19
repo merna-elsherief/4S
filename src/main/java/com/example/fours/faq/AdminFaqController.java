@@ -2,7 +2,6 @@ package com.example.fours.faq;
 
 import com.example.fours.payload.FaqRequest;
 import com.example.fours.payload.FaqResponse;
-import com.example.fours.payload.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,22 +14,13 @@ public class AdminFaqController {
 
     private final FaqService faqService;
 
-    @GetMapping
-    public ResponseEntity<PageResponse<FaqResponse>> getAllFaqs(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(faqService.getAllFaqs(page, size));
-    }
-
     @PostMapping
     public ResponseEntity<FaqResponse> createFaq(@RequestBody FaqRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(faqService.createFaq(request));
+        return new ResponseEntity<>(faqService.createFaq(request), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<FaqResponse> updateFaq(
-            @PathVariable String id,
-            @RequestBody FaqRequest request) {
+    public ResponseEntity<FaqResponse> updateFaq(@PathVariable String id, @RequestBody FaqRequest request) {
         return ResponseEntity.ok(faqService.updateFaq(id, request));
     }
 

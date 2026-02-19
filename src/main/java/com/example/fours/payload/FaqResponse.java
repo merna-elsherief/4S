@@ -1,12 +1,16 @@
 package com.example.fours.payload;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.Builder;
 
 @Data
 @Builder
 public class FaqResponse {
     private String id;
-    private String question;
-    private String answer;
+    private String questionEn;
+    private String answerEn;
+    private String questionAr;
+    private String answerAr;
+    private String category;
+    private Integer order;
 }

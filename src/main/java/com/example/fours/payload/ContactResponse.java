@@ -1,8 +1,7 @@
 package com.example.fours.payload;
 
-import lombok.Builder;
 import lombok.Data;
-
+import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Data
@@ -14,5 +13,5 @@ public class ContactResponse {
     private String phone;
     private String subject;
     private String message;
-    private LocalDateTime createdAt;
+    private LocalDateTime date;
 }
