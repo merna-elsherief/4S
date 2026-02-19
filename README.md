@@ -1,114 +1,107 @@
 # 🚀 4S Technology - Backend API
 
-![Java](https://img.shields.io/badge/Java-17-orange?style=for-the-badge&logo=java)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.5-green?style=for-the-badge&logo=spring)
-![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?style=for-the-badge&logo=mongodb)
-![JWT](https://img.shields.io/badge/Security-JWT-black?style=for-the-badge&logo=json-web-tokens)
-![Swagger](https://img.shields.io/badge/Swagger-UI-85EA2D?style=for-the-badge&logo=swagger)
-
-This repository contains the backend service for the **4S Technology** website. It is built using **Spring Boot 3** and **MongoDB**, providing a robust, secure, and fast RESTful API for content management (Blogs, FAQs) and handling customer inquiries.
-
-🔗 **Frontend Application:** [https://4s-techology.vercel.app](https://4s-techology.vercel.app)
-
----
-
-## ✨ Key Features
-
-* 🔐 **Secure Admin Authentication:** Stateless JWT authentication for the admin panel without requiring a dedicated user database collection.
-* 📄 **Blog Management:** Full CRUD operations for administrators. Includes SEO-friendly unique slugs and paginated reading for public users.
-* ❓ **FAQ Management:** Full CRUD operations for managing Frequently Asked Questions.
-* 📬 **Contact Us System:** Public endpoints for customers to submit inquiries, and secured endpoints for admins to review them.
-* 🌐 **Dynamic CORS Configuration:** Configured to accept requests from specific origins (e.g., Vercel and Localhost).
-* 📑 **Interactive API Documentation:** Integrated with **Swagger UI** for automated documentation and live endpoint testing.
-* ⚠️ **Global Exception Handling:** Standardized and clean JSON error responses across the entire application.
+A robust, feature-based RESTful API built with **Spring Boot** and **MongoDB** for managing the 4S Technology platform. This backend provides comprehensive endpoints for Blogs, FAQs, and Contact Us submissions, featuring bilingual support (English/Arabic) and secure Admin routes using JWT authentication.
 
 ---
 
 ## 🛠️ Tech Stack
 
-* **Core:** Java 17, Spring Boot 3.2.5
-* **Database:** Spring Data MongoDB
-* **Security:** Spring Security 6, JJWT (0.12.5)
-* **API Documentation:** SpringDoc OpenAPI (Swagger 3)
+* **Framework:** Spring Boot 3.x
+* **Database:** MongoDB
+* **Security:** Spring Security + JWT (JSON Web Tokens)
 * **Utilities:** Lombok, Maven
+* **Architecture:** Feature-Based (Domain-Driven Design concepts)
+
+---
+
+## 📂 Project Structure
+
+The project follows a clean **Feature-Based** architecture to ensure scalability, maintainability, and a clear separation of concerns:
+
+src/main/java/com/example/fours/
+├── blog/             # Blog models, repositories, services, and controllers
+├── faq/              # FAQ models, repositories, services, and controllers
+├── contact/          # Contact models, repositories, services, and controllers
+├── payload/          # Shared DTOs (Request & Response objects)
+├── security/         # JWT Authentication filters and Security configurations
+├── exception/        # Global Exception handling
+└── FoursApplication.java # Main application entry point
+
+---
+
+## ✨ Key Features
+
+* **Bilingual Support (🌐):** Native support for English and Arabic content across Blogs and FAQs (e.g., titleEn, titleAr).
+* **Separation of Concerns:** Distinct controllers for Admin (Secured) and Public (Open) access.
+* **Partial Updates (PATCH):** Update specific fields in database records without sending the entire object payload.
+* **Pagination:** Built-in pagination for fetching large datasets (Blogs, FAQs, Contact Messages).
+* **Security:** JWT-based authentication for all admin-level mutations (POST, PATCH, DELETE).
 
 ---
 
 ## ⚙️ Setup & Installation
 
-Follow these steps to run the project locally:
+### Prerequisites
+* Java 17 or higher
+* Maven
+* MongoDB (Local instance or MongoDB Atlas cluster)
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/YourUsername/4s-backend.git
-cd 4s-backend
-```
+### Steps to Run
 
-### 2. Configure Environment Variables
-Ensure your `src/main/resources/application.properties` is configured correctly. You can update the values based on your local or production environment:
+1. Clone the repository:
+   git clone https://github.com/merna_elsherief/4s-backend.git
+   cd 4s-backend
 
-```properties
-# MongoDB Configuration
-spring.data.mongodb.uri=mongodb://localhost:27017/fours_db
+2. Configure Environment Variables:
+   Update your src/main/resources/application.properties with your MongoDB URI and JWT Secret:
+   spring.data.mongodb.uri=mongodb+srv://<username>:<password>@cluster.mongodb.net/4s_db
+   jwt.secret=YOUR_SUPER_SECRET_KEY_MAKE_IT_LONG_AND_SECURE
 
-# Admin Credentials (In-Memory)
-admin.email=admin@4s-tech.com
-admin.password=admin123
+3. Build and Run:
+   mvn clean install
+   mvn spring-boot:run
 
-# JWT Configuration (Ensure the secret is long enough for HS256)
-jwt.secret=YourSuperSecretKeyForJwtAuthenticationMustBeLongEnough
-jwt.expiration=86400000
-
-# CORS Configuration (Comma-separated origins, no spaces)
-app.cors.allowed-origins=http://localhost:3000,https://4s-techology.vercel.app
-```
-
-### 3. Run the Application
-```bash
-mvn spring-boot:run
-```
-The server will start on `http://localhost:8080`.
+The application will start on http://localhost:8080.
 
 ---
 
-## 📖 API Documentation (Swagger)
+## 📡 API Endpoints Overview
 
-This project includes an embedded **Swagger UI** to explore and test the APIs directly from your browser.
-Once the application is running, navigate to:
+For detailed API testing and integration, please import the provided **Postman Collection** (4S_Technology_APIs.json) into your Postman workspace.
 
-👉 **[http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)**
-
-*Note: To test secured endpoints, login via `/api/auth/login`, copy the generated token, click the "Authorize" button at the top of the Swagger page, and paste the token.*
-
----
-
-## 📡 API Endpoints Summary
-
-### 👤 Authentication
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/auth/login` | Authenticate admin and get JWT | **Public** |
+### 🔐 Authentication
+* POST /api/auth/login - Authenticate admin and receive JWT token.
 
 ### 📝 Blogs
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/blogs?page=0&size=10` | Get all blogs (Paginated) | **Public** |
-| `GET` | `/api/blogs/{slug}` | Get a single blog by its unique slug | **Public** |
-| `POST` | `/api/admin/blogs` | Create a new blog | 🔒 **Admin** |
-| `PATCH` | `/api/admin/blogs/{id}` | Update an existing blog | 🔒 **Admin** |
-| `DELETE` | `/api/admin/blogs/{id}` | Delete a blog | 🔒 **Admin** |
+Public Endpoints:
+* GET /api/blogs - Get all published blogs (Paginated).
+* GET /api/blogs/{slug} - Get a specific blog by its slug.
+
+Admin Endpoints (Requires JWT):
+* POST /api/admin/blogs - Create a new blog.
+* PATCH /api/admin/blogs/{id} - Partially update a blog.
+* DELETE /api/admin/blogs/{id} - Delete a blog.
 
 ### ❓ FAQs
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/faqs` | Get all FAQs | **Public** |
-| `POST` | `/api/admin/faqs` | Create a new FAQ | 🔒 **Admin** |
-| `DELETE` | `/api/admin/faqs/{id}` | Delete an FAQ | 🔒 **Admin** |
+Public Endpoints:
+* GET /api/faqs - Get all FAQs (Paginated).
 
-### 📞 Contact Us
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/contact` | Submit a contact form | **Public** |
-| `GET` | `/api/admin/contact` | View all submitted messages | 🔒 **Admin** |
+Admin Endpoints (Requires JWT):
+* POST /api/admin/faqs - Create a new FAQ.
+* PATCH /api/admin/faqs/{id} - Partially update an FAQ.
+* DELETE /api/admin/faqs/{id} - Delete an FAQ.
+
+### 📬 Contact Us
+Public Endpoints:
+* POST /api/contact - Submit a new contact message.
+
+Admin Endpoints (Requires JWT):
+* GET /api/admin/contact - Retrieve contact messages (Paginated).
 
 ---
+
+## 🛡️ Authentication Note
+All /api/admin/** endpoints are protected and require a valid JWT token.
+Pass the token in the HTTP request header as follows:
+
+Authorization: Bearer <your_jwt_token>
